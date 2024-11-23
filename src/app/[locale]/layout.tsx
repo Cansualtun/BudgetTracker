@@ -3,6 +3,8 @@ import { Layout } from './components/ui/layout';
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { Providers } from '../provider';
+import { Toaster } from 'react-hot-toast';
 
 export default async function RootLayout({
   children,
@@ -15,13 +17,16 @@ export default async function RootLayout({
   return (
     <html lang={params.locale}>
       <body>
-        <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            <Layout>
-              {children}
-            </Layout>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <Providers>
+          <Toaster />
+          <ThemeProvider>
+            <NextIntlClientProvider messages={messages}>
+              <Layout>
+                {children}
+              </Layout>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

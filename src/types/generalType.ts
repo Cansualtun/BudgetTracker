@@ -4,7 +4,7 @@ export interface Transaction {
   amount: number;
   description: string;
   date: string;
-  category: Category;
+  category: string;
 }
 
 export interface NewTransaction {
@@ -12,9 +12,12 @@ export interface NewTransaction {
   amount: string;
   description: string;
 }
+export interface Category {
+  id: string;
+  label: string;
+}
+
 export type Theme = "light" | "dark";
 export type Language = "tr" | "en";
-
-export type Category = string;
 
 export type TransactionType = "income" | "expense";

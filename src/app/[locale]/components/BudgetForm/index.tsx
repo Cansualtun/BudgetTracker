@@ -1,26 +1,35 @@
 "use client"
-import { Transaction, TransactionType } from '@/types/generalType';
+import { useAppSelector } from '@/hooks/useAppDispatch';
+import { TransactionType } from '@/types/generalType';
 import { useTranslations } from "next-intl";
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, ChangeEvent } from 'react';
 
-interface BudgetFormProps {
-    onSubmit: (transaction: Transaction) => void;
-}
-
+// Types
 interface Category {
     id: string;
     label: string;
+}
+
+interface Transaction {
+    id: number;
+    type: TransactionType;
+    amount: number;
+    description: string;
+    category: string;
+    date: string;
+}
+
+interface BudgetFormProps {
+    onSubmit: (transaction: Transaction) => void;
 }
 
 interface NewTransactionState {
     type: TransactionType;
     amount: string;
     description: string;
-    category: string;
+    category: string; // category.id olarak string tutuyoruz
     date: string;
 }
-
-const STORAGE_KEY = 'budget_categories';
 
 const DEFAULT_CATEGORY: Category = { id: 'diger', label: 'Diğer' };
 
@@ -34,34 +43,9 @@ const DEFAULT_TRANSACTION: NewTransactionState = {
 
 export function BudgetForm({ onSubmit }: BudgetFormProps) {
     const t = useTranslations();
-    const [categories, setCategories] = useState<Category[]>([DEFAULT_CATEGORY]);
+    const categories = useAppSelector(state => state.categories.categories);
     const [newTransaction, setNewTransaction] = useState<NewTransactionState>(DEFAULT_TRANSACTION);
 
-    useEffect(() => {
-        loadCategories();
-        const handleStorageChange = (e: StorageEvent) => {
-            if (e.key === STORAGE_KEY) {
-                loadCategories();
-            }
-        };
-        window.addEventListener('storage', handleStorageChange);
-        window.addEventListener('categoriesUpdated', loadCategories);
-    }, []);
-
-    const loadCategories = () => {
-        try {
-            const storedData = localStorage.getItem(STORAGE_KEY);
-            if (storedData) {
-                const parsedCategories = JSON.parse(storedData);
-                const filteredCategories = parsedCategories
-                    .filter((cat: Category) => cat.id !== 'all' && cat.id !== DEFAULT_CATEGORY.id);
-                setCategories([...filteredCategories, DEFAULT_CATEGORY]);
-            }
-        } catch (error) {
-            console.error('Error loading categories:', error);
-            setCategories([DEFAULT_CATEGORY]);
-        }
-    };
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setNewTransaction(prev => ({
@@ -69,6 +53,7 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
             [name]: name === 'type' ? value as TransactionType : value
         }));
     };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 

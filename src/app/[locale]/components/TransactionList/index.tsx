@@ -1,56 +1,40 @@
-import { Category, Transaction } from "@/types/generalType";
+"use client"
+import { Transaction } from "@/types/generalType";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CategoryModal from "../CategoryModal";
+import { addCategory } from '@/store/categorySlice';
+import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
 
 interface TransactionListProps {
     transactions: Transaction[];
 }
 
-const STORAGE_KEY = 'budget_categories';
-const DEFAULT_CATEGORIES = [{ id: 'all', label: 'Tümü' }];
+type ActiveTabType = 'all' | string;
 
 export function TransactionList({ transactions }: TransactionListProps) {
-    const [activeTab, setActiveTab] = useState<'all' | Category>('all');
+    const [activeTab, setActiveTab] = useState<ActiveTabType>('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
-    const [categories, setCategories] = useState<{ id: Category | 'all', label: string }[]>(DEFAULT_CATEGORIES);
-    const [isClient, setIsClient] = useState(false);
+
+    // Redux hooks
+    const dispatch = useAppDispatch();
+    const categories = useAppSelector(state => state.categories.categories);
+    const allCategories = [{ id: 'all', label: 'Tümü' }, ...categories];
+
     const router = useRouter();
     const t = useTranslations();
 
-
-    useEffect(() => {
-        setIsClient(true);
-        const storedData = localStorage.getItem(STORAGE_KEY);
-        if (storedData) {
-            try {
-                const parsedCategories = JSON.parse(storedData);
-                setCategories([DEFAULT_CATEGORIES[0], ...parsedCategories]);
-            } catch (error) {
-                console.error('Error loading categories from localStorage:', error);
-                setCategories(DEFAULT_CATEGORIES);
-            }
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isClient) {
-            try {
-                const categoriesToStore = categories.filter(cat => cat.id !== 'all');
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(categoriesToStore));
-            } catch (error) {
-                console.error('Error saving categories to localStorage:', error);
-            }
-        }
-    }, [categories, isClient]);
-
-    const addCategory = () => {
+    const handleAddCategory = () => {
         if (newCategory.trim()) {
-            const newCategoryId = newCategory.toLowerCase().replace(/\s+/g, '-') as Category;
-            const newCategoryObj = { id: newCategoryId, label: newCategory.trim() };
-            setCategories(prev => [...prev, newCategoryObj]);
+            const newCategoryId = newCategory.toLowerCase().replace(/\s+/g, '-');
+            const newCategoryObj = {
+                id: newCategoryId,
+                label: newCategory.trim()
+            };
+
+            dispatch(addCategory(newCategoryObj));
             setActiveTab(newCategoryId);
             setNewCategory('');
             setIsModalOpen(false);
@@ -61,27 +45,23 @@ export function TransactionList({ transactions }: TransactionListProps) {
         ? transactions
         : transactions.filter(t => t.category === activeTab);
 
-    const getCategoryTotal = (category: Category | 'all', type: 'income' | 'expense') => {
+    const getCategoryTotal = (category: string, type: 'income' | 'expense') => {
         const filtered = category === 'all' ? transactions : transactions.filter(t => t.category === category);
         return filtered
             .filter(t => t.type === type)
             .reduce((sum, t) => sum + t.amount, 0);
     };
 
-    if (!isClient) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div className="mt-8">
             <div className="border-b border-gray-200 mb-6">
                 <nav className="-mb-px flex space-x-4 overflow-x-auto pb-2">
-                    {categories.map(category => (
+                    {allCategories.map(category => (
                         <div key={category.id} className="flex items-center gap-2">
                             <button
                                 onClick={() => setActiveTab(category.id)}
                                 className={`whitespace-nowrap py-2 px-3 border-b-2 text-sm font-medium rounded-t-lg
-                        ${activeTab === category.id
+                                    ${activeTab === category.id
                                         ? 'border-blue-500 text-blue-600 bg-blue-50'
                                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
@@ -99,7 +79,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                                         router.push(`/stats/${encodeURIComponent(category.label)}`);
                                     }}
                                     className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 
-                                 rounded-lg transition-colors flex items-center"
+                                        rounded-lg transition-colors flex items-center"
                                     title={`${category.label} istatistikleri`}
                                 >
                                     <svg
@@ -122,7 +102,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="whitespace-nowrap py-2 px-3 border-b-2 border-transparent 
-                    text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium rounded-t-lg"
+                            text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium rounded-t-lg"
                     >
                         <svg
                             className="w-4 h-4"
@@ -155,7 +135,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                                 <div className="flex items-center gap-2">
                                     <p className="font-semibold">{transaction.description}</p>
                                     <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                                        {categories.find(c => c.id === transaction.category)?.label || 'Belirtilmemiş'}
+                                        {allCategories.find(c => c.id === transaction.category)?.label || 'Belirtilmemiş'}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -190,7 +170,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                     <h3 className="text-sm text-green-800 font-medium">
                         {activeTab === 'all'
                             ? t("budget.transactions.list.categoryTotal.income")
-                            : `${categories.find(c => c.id === activeTab)?.label} Gelir`}
+                            : `${allCategories.find(c => c.id === activeTab)?.label} Gelir`}
                     </h3>
                     <p className="text-xl text-green-600 font-bold">
                         ₺{getCategoryTotal(activeTab, 'income').toLocaleString()}
@@ -200,7 +180,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
                     <h3 className="text-sm text-red-800 font-medium">
                         {activeTab === 'all'
                             ? t("budget.transactions.list.categoryTotal.expense")
-                            : `${categories.find(c => c.id === activeTab)?.label} Gider`}
+                            : `${allCategories.find(c => c.id === activeTab)?.label} Gider`}
                     </h3>
                     <p className="text-xl text-red-600 font-bold">
                         ₺{getCategoryTotal(activeTab, 'expense').toLocaleString()}
@@ -210,7 +190,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
             <CategoryModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onAddCategory={addCategory}
+                onAddCategory={handleAddCategory}
+                newCategory={newCategory}
+                setNewCategory={setNewCategory}
             />
         </div>
     );
