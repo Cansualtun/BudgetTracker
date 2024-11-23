@@ -1,7 +1,10 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { Transaction } from "@/types/generalType";
-import { BarChartComponent, LineChartComponent } from '../../components/DynamicCharts';
+import LineChartComponent from '../../components/Charts/LineChart';
+import BarChartComponent from '../../components/Charts/BarChart';
+import { useTranslations } from 'next-intl';
+import SearchingAnimation from '../../components/Searching';
 
 interface CategoryType {
     id: string;
@@ -23,7 +26,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [viewType, setViewType] = useState<ViewType>('monthly');
     const categoryId = params.slug as string;
-
+    const t = useTranslations();
     useEffect(() => {
         const fetchCategoryInfo = () => {
             const storedCategories = localStorage.getItem('budget_categories');
@@ -91,9 +94,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
     if (!categoryName) {
         return (
             <div className="container mx-auto px-4 py-8">
-                <div className="text-center py-8 text-gray-500">
-                    Kategori bulunamadı
-                </div>
+                <SearchingAnimation />
             </div>
         );
     }
@@ -102,7 +103,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">
-                    {viewType === 'monthly' ? 'Aylık' : 'Yıllık'} Gelir/Gider Grafiği
+                    {viewType === 'monthly' ? t("budget.stats.monthly") : t("budget.stats.yearly")} {t("budget.stats.chartName")}
                 </h2>
                 <div className="flex space-x-2">
                     <button
@@ -113,7 +114,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                     >
-                        Aylık
+                        {t("budget.stats.monthly")}
                     </button>
                     <button
                         onClick={() => setViewType('yearly')}
@@ -123,22 +124,23 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                     >
-                        Yıllık
+                        {t("budget.stats.yearly")}
                     </button>
                 </div>
             </div>
             <div className="mb-8">
-                <h1 className="text-2xl font-bold mb-2">{categoryName} İstatistikleri</h1>
+                <h1 className="text-2xl font-bold mb-2">{categoryName} {t("budget.stats.stats")}</h1>
                 <p className="text-sm text-gray-600">
-                    Bu kategorideki toplam işlem sayısı: {categoryTransactions.length}
+                    {t("budget.stats.totalTransactions")} {categoryTransactions.length}
                 </p>
             </div>
 
             <div className="mt-8">
-                <h2 className="text-xl font-semibold">Line Chart</h2>
+                <h2 className="text-xl font-semibold">{t("budget.stats.lineChart")}</h2>
                 <LineChartComponent data={chartData} />
             </div>
             <div className="mt-8">
+                <h2 className="text-xl font-semibold">{t("budget.stats.barChart")}</h2>
                 <div className="w-full h-[400px] bg-white p-4 rounded-xl border">
                     <BarChartComponent data={chartData} />
                 </div>

@@ -48,7 +48,6 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
         window.addEventListener('categoriesUpdated', loadCategories);
     }, []);
 
-    // Kategorileri yükle
     const loadCategories = () => {
         try {
             const storedData = localStorage.getItem(STORAGE_KEY);

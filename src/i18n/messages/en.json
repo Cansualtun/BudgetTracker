@@ -2,6 +2,9 @@
   "budget": {
     "title": "Budget Management",
     "subtitle": "Track your income and expenses easily",
+    "expense": "Expense",
+    "income": "Income",
+    "net": "Net Balance",
     "newTransaction": {
       "title": "New Transaction",
       "subtitle": "Add income or expense"
@@ -14,7 +17,8 @@
       "save": "Save",
       "income": "Income",
       "expense": "Expense",
-      "descriptionPlaceholder": "Enter description"
+      "descriptionPlaceholder": "Enter description",
+      "date": "Date"
     },
     "summary": {
       "totalIncome": {
@@ -52,6 +56,22 @@
           "categoryExpense": "{category} Expense"
         }
       }
+    },
+    "categoryModal": {
+      "addNewCategory": "Add New Category",
+      "categoryName": "Category Name",
+      "cancel": "Cancel",
+      "add": "Add",
+      "placeholder": "Example: Cosmectic"
+    },
+    "stats": {
+      "chartName": "Income/Expense Chart",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "stats": "Statistics",
+      "totalTransactions": "Total number of transactions in this category:",
+      "lineChart": "Line Chart",
+      "barChart": "Bar Chart"
     }
   }
 }

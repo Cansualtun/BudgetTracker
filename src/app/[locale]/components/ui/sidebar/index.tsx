@@ -2,6 +2,7 @@
 import { useTheme } from '@/context/ThemeContext';
 import { Sun, Moon, Languages } from 'lucide-react';
 import { useTranslations } from "next-intl";
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
 export function Sidebar() {
@@ -22,12 +23,14 @@ export function Sidebar() {
             bg-background/50 backdrop-blur-lg border-r border-border/40 
             shadow-[5px_0_30px_-15px_rgba(0,0,0,0.1)]">
             <div className="mb-12">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/80 to-primary 
+                <Link href={"/"}>
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/80 to-primary 
                     flex items-center justify-center text-primary-foreground font-bold text-xl
                     shadow-lg shadow-primary/20 hover:shadow-primary/30 
                     transition-all duration-300 hover:scale-105 cursor-pointer">
-                    B
-                </div>
+                        B
+                    </div>
+                </Link>
             </div>
             <div className="flex flex-col items-center gap-6">
                 <button
@@ -47,8 +50,6 @@ export function Sidebar() {
                     )}
                     <span className="sr-only">Toggle theme</span>
                 </button>
-
-                {/* Language Toggle */}
                 <button
                     onClick={toggleLanguage}
                     className="group relative p-3 rounded-xl hover:bg-secondary/10 
@@ -68,8 +69,6 @@ export function Sidebar() {
                     <span className="sr-only">Change language</span>
                 </button>
             </div>
-
-            {/* Bottom Gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t 
                 from-background to-transparent pointer-events-none"/>
         </div>
