@@ -1,5 +1,6 @@
 import { Category, Transaction } from "@/types/generalType";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 interface TransactionListProps {
@@ -15,7 +16,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
     const [newCategory, setNewCategory] = useState('');
     const [categories, setCategories] = useState<{ id: Category | 'all', label: string }[]>(DEFAULT_CATEGORIES);
     const [isClient, setIsClient] = useState(false);
-
+    const router = useRouter();
     const t = useTranslations();
 
 
@@ -75,27 +76,52 @@ export function TransactionList({ transactions }: TransactionListProps) {
             <div className="border-b border-gray-200 mb-6">
                 <nav className="-mb-px flex space-x-4 overflow-x-auto pb-2">
                     {categories.map(category => (
-                        <button
-                            key={category.id}
-                            onClick={() => setActiveTab(category.id)}
-                            className={`whitespace-nowrap py-2 px-3 border-b-2 text-sm font-medium rounded-t-lg
-                                ${activeTab === category.id
-                                    ? 'border-blue-500 text-blue-600 bg-blue-50'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }`}
-                        >
-                            {category.label}
+                        <div key={category.id} className="flex items-center gap-2">
+                            <button
+                                onClick={() => setActiveTab(category.id)}
+                                className={`whitespace-nowrap py-2 px-3 border-b-2 text-sm font-medium rounded-t-lg
+                        ${activeTab === category.id
+                                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    }`}
+                            >
+                                {category.label}
+                                {category.id !== 'all' && (
+                                    <span className="ml-2 text-xs text-gray-400">
+                                        ({transactions.filter(t => t.category === category.id).length})
+                                    </span>
+                                )}
+                            </button>
                             {category.id !== 'all' && (
-                                <span className="ml-2 text-xs text-gray-400">
-                                    ({transactions.filter(t => t.category === category.id).length})
-                                </span>
+                                <button
+                                    onClick={() => {
+                                        router.push(`/stats/${encodeURIComponent(category.label)}`);
+                                    }}
+                                    className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 
+                                 rounded-lg transition-colors flex items-center"
+                                    title={`${category.label} istatistikleri`}
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        strokeWidth="1.5"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+                                        />
+                                    </svg>
+                                </button>
                             )}
-                        </button>
+                        </div>
                     ))}
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="whitespace-nowrap py-2 px-3 border-b-2 border-transparent 
-                                text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium rounded-t-lg"
+                    text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium rounded-t-lg"
                     >
                         <svg
                             className="w-4 h-4"
