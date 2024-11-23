@@ -1,24 +1,26 @@
 import { ThemeProvider } from '@/context/ThemeContext';
-import { LanguageProvider } from '@/context/LanguageContext';
 import { Layout } from './components/ui/layout';
 import "../globals.css";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  const messages = await getMessages();
   return (
     <html lang={params.locale}>
       <body>
         <ThemeProvider>
-          <LanguageProvider initialLocale={params.locale as 'tr' | 'en'}>
+          <NextIntlClientProvider messages={messages}>
             <Layout>
               {children}
             </Layout>
-          </LanguageProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

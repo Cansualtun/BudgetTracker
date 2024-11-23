@@ -1,0 +1,57 @@
+{
+  "budget": {
+    "title": "Budget Management",
+    "subtitle": "Track your income and expenses easily",
+    "newTransaction": {
+      "title": "New Transaction",
+      "subtitle": "Add income or expense"
+    },
+    "form": {
+      "type": "Transaction Type",
+      "amount": "Amount",
+      "description": "Description",
+      "category": "Category",
+      "save": "Save",
+      "income": "Income",
+      "expense": "Expense",
+      "descriptionPlaceholder": "Enter description"
+    },
+    "summary": {
+      "totalIncome": {
+        "label": "Total Income",
+        "prefix": "$"
+      },
+      "totalExpense": {
+        "label": "Total Expense",
+        "prefix": "$"
+      },
+      "netBalance": {
+        "label": "Net Balance",
+        "prefix": "$"
+      }
+    },
+    "transactions": {
+      "title": "Recent Transactions",
+      "subtitle": "All your income and expense movements",
+      "list": {
+        "title": "Transaction List",
+        "emptyMessage": "No transactions found in this category",
+        "categories": {
+          "all": "All",
+          "mutfak": "Kitchen",
+          "kozmetik": "Cosmetics",
+          "egitim": "Education",
+          "ulasim": "Transportation",
+          "eglence": "Entertainment",
+          "diger": "Other"
+        },
+        "categoryTotal": {
+          "income": "Total Income",
+          "expense": "Total Expense",
+          "categoryIncome": "{category} Income",
+          "categoryExpense": "{category} Expense"
+        }
+      }
+    }
+  }
+}

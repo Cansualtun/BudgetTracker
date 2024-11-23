@@ -3,6 +3,7 @@ export interface Transaction {
   type: "income" | "expense";
   amount: number;
   description: string;
+  date: string;
   category: Category;
 }
 
@@ -14,12 +15,6 @@ export interface NewTransaction {
 export type Theme = "light" | "dark";
 export type Language = "tr" | "en";
 
-export type Category =
-  | "mutfak"
-  | "kozmetik"
-  | "egitim"
-  | "ulasim"
-  | "eglence"
-  | "diger";
+export type Category = string;
 
 export type TransactionType = "income" | "expense";

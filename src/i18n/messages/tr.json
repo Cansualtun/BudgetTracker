@@ -1,0 +1,57 @@
+{
+  "budget": {
+    "title": "Bütçe Yönetimi",
+    "subtitle": "Gelir ve giderlerinizi kolayca takip edin",
+    "newTransaction": {
+      "title": "Yeni İşlem",
+      "subtitle": "Gelir veya gider ekleyin"
+    },
+    "form": {
+      "type": "İşlem Tipi",
+      "amount": "Tutar",
+      "description": "Açıklama",
+      "category": "Kategori",
+      "save": "Kaydet",
+      "income": "Gelir",
+      "expense": "Gider",
+      "descriptionPlaceholder": "Açıklama giriniz"
+    },
+    "summary": {
+      "totalIncome": {
+        "label": "Toplam Gelir",
+        "prefix": "₺"
+      },
+      "totalExpense": {
+        "label": "Toplam Gider",
+        "prefix": "₺"
+      },
+      "netBalance": {
+        "label": "Net Durum",
+        "prefix": "₺"
+      }
+    },
+    "transactions": {
+      "title": "Son İşlemler",
+      "subtitle": "Tüm gelir ve gider hareketleriniz",
+      "list": {
+        "title": "İşlem Listesi",
+        "emptyMessage": "Bu kategoride henüz işlem bulunmuyor",
+        "categories": {
+          "all": "Tümü",
+          "mutfak": "Mutfak",
+          "kozmetik": "Kozmetik",
+          "egitim": "Eğitim",
+          "ulasim": "Ulaşım",
+          "eglence": "Eğlence",
+          "diger": "Diğer"
+        },
+        "categoryTotal": {
+          "income": "Toplam Gelir",
+          "expense": "Toplam Gider",
+          "categoryIncome": "{category} Gelir",
+          "categoryExpense": "{category} Gider"
+        }
+      }
+    }
+  }
+}
