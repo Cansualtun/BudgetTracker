@@ -28,12 +28,6 @@ export default function AllStats() {
         setMounted(true);
     }, []);
 
-    // Yardımcı fonksiyonlar
-    const formatMoney = (amount: number) => {
-        if (!mounted) return "0";
-        return amount.toLocaleString('tr-TR');
-    };
-
     const formatDate = (date: Date, type: ViewType) => {
         if (!mounted) return "";
         if (type === 'yearly') return date.getFullYear().toString();
@@ -140,9 +134,6 @@ export default function AllStats() {
         );
     }
 
-    const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-    const netBalance = totalIncome - totalExpense;
     return (
         <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
