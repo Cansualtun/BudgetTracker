@@ -47,7 +47,7 @@ export function BudgetForm() {
         e.preventDefault();
 
         if (!isValidTransaction()) {
-            toast.error("Lütfen tüm alanları doldurun!");
+            toast.error(t("budget.toast.fillInBlank"));
             return;
         }
 
@@ -61,7 +61,7 @@ export function BudgetForm() {
         };
 
         dispatch(addTransaction(transaction));
-        toast.success("İşlem başarıyla eklendi!");
+        toast.success(t("budget.toast.transactionToast"));
         resetForm();
     };
 

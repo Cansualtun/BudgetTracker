@@ -2,43 +2,22 @@
 import { useState, useEffect } from 'react'
 import { BudgetForm } from '../BudgetForm';
 import { TransactionList } from '../TransactionList';
-import { Transaction } from '@/types/generalType';
 import { useTranslations } from "next-intl";
-import SearchingAnimation from '../Searching';
-
-const STORAGE_KEY = 'budget_transactions';
+import { useAppSelector } from '@/hooks/useAppDispatch';
+import Loading from '../Searching';
 
 export function BudgetContainer() {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isClient, setIsClient] = useState(false);
     const t = useTranslations();
-
+    const transactions = useAppSelector(state => state.transactions.transactions);
 
     useEffect(() => {
-        setIsClient(true)
-        const storedData = localStorage.getItem(STORAGE_KEY);
-        if (storedData) {
-            try {
-                setTransactions(JSON.parse(storedData));
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-            }
-        }
+        setIsClient(true);
     }, []);
-
-    useEffect(() => {
-        if (isClient) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
-        }
-    }, [transactions, isClient]);
-
-    function handleAddTransaction(newTransaction: Transaction) {
-        setTransactions(prev => [...prev, newTransaction]);
-    }
 
     if (!isClient) {
         return <div className="min-h-screen bg-background pb-8">
-            <SearchingAnimation />
+            <Loading />
         </div>;
     }
 
@@ -64,7 +43,7 @@ export function BudgetContainer() {
                                     {t('budget.newTransaction.subtitle')}
                                 </p>
                             </div>
-                            <BudgetForm onSubmit={handleAddTransaction} />
+                            <BudgetForm />
                         </div>
                     </div>
                     <div className="col-span-1 lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6">
@@ -124,9 +103,7 @@ export function BudgetContainer() {
                                     {t('budget.transactions.subtitle')}
                                 </p>
                             </div>
-                            <TransactionList
-                                transactions={transactions}
-                            />
+                            <TransactionList />
                         </div>
                     </div>
                 </div>

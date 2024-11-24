@@ -77,7 +77,19 @@
     },
     "toast": {
       "categoryToast": "Category Successfully Added!",
-      "transactionToast": "Transaction Successfully Added!"
+      "transactionToast": "Transaction Successfully Added!",
+      "categoryDeleted": "Category Successfully Deleted!",
+      "transactionDeleted": "Transaction Successfully Deleted!",
+      "warning": "Warning",
+      "fillInBlank": "Please fill in all fields!",
+      "limitWarning": {
+        "title": "Warning: Expense Limit",
+        "message": "Category \"{category}\" has reached {percentage}% of its limit!",
+        "remaining": "Remaining budget: ${amount}"
+      }
+    },
+    "loading": {
+      "loading": "Loading.."
     }
   }
 }

@@ -1,5 +1,5 @@
 "use client"
-import { Transaction, TransactionType } from "@/types/generalType";
+import { TransactionType } from "@/types/generalType";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -50,7 +50,7 @@ export function TransactionList() {
             return;
         }
         dispatch(removeCategory(categoryId));
-        toast.success("Kategori başarıyla silindi!");
+        toast.success(t("budget.toast.categoryDeleted"));
         if (activeTab === categoryId) {
             setActiveTab('all');
         }
@@ -88,7 +88,7 @@ export function TransactionList() {
     };
     const handleDeleteTransaction = (transactionId: number) => {
         dispatch(removeTransaction(transactionId));
-        toast.success("İşlem başarıyla silindi!");
+        toast.success(t("budget.toast.transactionDeleted"));
     };
     useEffect(() => {
         categories.forEach(category => {
@@ -101,8 +101,13 @@ export function TransactionList() {
                     const remainingBudget = category.limit - totalExpense;
 
                     toast.error(
-                        `Dikkat: "${category.label}" kategorisinde limit aşımı! (%${percentage.toFixed(1)})
-                        Kalan: ₺${remainingBudget.toLocaleString()}`,
+                        `${t("budget.toast.warning")}: ${t("budget.toast.limitWarning.message", {
+                            category: category.label,
+                            percentage: percentage.toFixed(1)
+                        })}
+                        ${t("budget.toast.limitWarning.remaining", {
+                            amount: remainingBudget.toLocaleString()
+                        })}`,
                         {
                             duration: 5000,
                             icon: '⚠️',
@@ -111,7 +116,7 @@ export function TransactionList() {
                 }
             }
         });
-    }, [transactions, categories]);
+    }, [transactions, categories, t]);
 
     return (
         <div className="mt-8">

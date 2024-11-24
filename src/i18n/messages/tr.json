@@ -77,7 +77,19 @@
     },
     "toast": {
       "categoryToast": "Kategori Başarıyla Eklendi!",
-      "transactionToast": "İşlem Başarıyla Eklendi!"
+      "transactionToast": "İşlem Başarıyla Eklendi!",
+      "categoryDeleted": "Kategori Başarıyla Silindi!",
+      "transactionDeleted": "İşlem Başarıyla Silindi!",
+      "warning": "Dikkat",
+      "fillInBlank": "Lütfen tüm alanları doldurun!",
+      "limitWarning": {
+        "title": "Dikkat: Harcama Limiti",
+        "message": "\"{category}\" kategorisinde limit kullanımı %{percentage}'e ulaştı!",
+        "remaining": "Kalan limit: ₺{amount}"
+      }
+    },
+    "loading": {
+      "loading": "Yükleniyor.."
     }
   }
 }
