@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface ChartData {
@@ -12,20 +11,81 @@ interface ChartProps {
     data: ChartData[];
 }
 const LineChartComponent = ({ data }: ChartProps) => {
-    const t = useTranslations();
+    console.log(data, "ehe")
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip formatter={(value) => `₺${value.toLocaleString()}`} />
-                <Legend />
-                <Line type="monotone" dataKey="gelir" stroke="#22c55e" name={t("budget.income")} />
-                <Line type="monotone" dataKey="gider" stroke="#ef4444" name={t("budget.expense")} />
-                <Line type="monotone" dataKey="net" stroke="#3b82f6" name={t("budget.net")} />
+        <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+                data={data}
+                margin={{
+                    top: 5,
+                    right: 5,
+                    left: -20,
+                    bottom: 5,
+                }}
+            >
+                <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="currentColor"
+                    opacity={0.1}
+                />
+                <XAxis
+                    dataKey="name"
+                    stroke="currentColor"
+                    opacity={0.7}
+                    tick={{ fill: 'currentColor', opacity: 0.7, fontSize: '0.75rem' }}
+                    angle={-45} // Mobilde etiketlerin üst üste binmemesi için
+                    textAnchor="end"
+                    height={60} // Açılı etiketler için daha fazla alan
+                    interval="preserveStartEnd" // Mobilde daha az etiket göster
+                />
+                <YAxis
+                    stroke="currentColor"
+                    opacity={0.7}
+                    tick={{ fill: 'currentColor', opacity: 0.7, fontSize: '0.75rem' }}
+                    width={45} // Mobilde daha dar
+                />
+                <Tooltip
+                    contentStyle={{
+                        backgroundColor: 'var(--tooltip-bg, #fff)',
+                        border: '1px solid var(--tooltip-border, #ccc)',
+                        borderRadius: '0.5rem',
+                        color: 'var(--tooltip-text, #000)',
+                        fontSize: '0.75rem',
+                        padding: '0.5rem'
+                    }}
+                />
+                <Legend
+                    wrapperStyle={{
+                        color: 'currentColor',
+                        opacity: 0.7,
+                        fontSize: '0.75rem',
+                        padding: '0.5rem 0'
+                    }}
+                />
+                <Line
+                    type="monotone"
+                    dataKey="gelir"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={{ fill: '#22c55e', r: 4 }} // Mobilde daha küçük noktalar
+                />
+                <Line
+                    type="monotone"
+                    dataKey="gider"
+                    stroke="#ef4444"
+                    strokeWidth={2}
+                    dot={{ fill: '#ef4444', r: 4 }}
+                />
+                <Line
+                    type="monotone"
+                    dataKey="net"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={{ fill: '#3b82f6', r: 4 }}
+                />
             </LineChart>
         </ResponsiveContainer>
     );
 };
+
 export default LineChartComponent

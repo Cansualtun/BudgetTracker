@@ -2,9 +2,8 @@
 import { useAppSelector } from '@/hooks/useAppDispatch';
 import { TransactionType } from '@/types/generalType';
 import { useTranslations } from "next-intl";
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 
-// Types
 interface Category {
     id: string;
     label: string;
@@ -27,7 +26,7 @@ interface NewTransactionState {
     type: TransactionType;
     amount: string;
     description: string;
-    category: string; // category.id olarak string tutuyoruz
+    category: string;
     date: string;
 }
 
@@ -70,7 +69,9 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
 
         resetForm();
     };
-
+    useEffect(() => {
+        setNewTransaction({ ...newTransaction, category: categories[0].id })
+    }, [])
     const isValidTransaction = () => {
         return newTransaction.amount &&
             newTransaction.description &&
@@ -162,7 +163,9 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
                         text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500
                         border-gray-300 dark:border-gray-700"
                 >
+
                     {categories.map(category => (
+
                         <option key={category.id} value={category.id}>
                             {category.label}
                         </option>

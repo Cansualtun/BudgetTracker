@@ -37,7 +37,7 @@ export function Sidebar() {
                     onClick={toggleTheme}
                     className="group relative p-3 rounded-xl hover:bg-secondary/10 
                         transition-all duration-300 hover:scale-105 active:scale-95"
-                    title={theme === 'light' ? t('common.theme.dark') : t('common.theme.light')}
+
                 >
                     <div className="absolute inset-0 rounded-xl bg-secondary/0 
                         group-hover:bg-secondary/5 transition-colors"/>
@@ -54,7 +54,7 @@ export function Sidebar() {
                     onClick={toggleLanguage}
                     className="group relative p-3 rounded-xl hover:bg-secondary/10 
                         transition-all duration-300 hover:scale-105 active:scale-95"
-                    title={t('common.language.switch')}
+
                 >
                     <div className="absolute inset-0 rounded-xl bg-secondary/0 
                         group-hover:bg-secondary/5 transition-colors"/>

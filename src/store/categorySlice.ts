@@ -7,27 +7,22 @@ interface CategoryState {
   categories: Category[];
 }
 
-const DEFAULT_CATEGORY: Category = { id: "diger", label: "Diğer" };
-
 const loadInitialState = (): CategoryState => {
   if (typeof window === "undefined") {
-    return { categories: [DEFAULT_CATEGORY] };
+    return { categories: [] };
   }
 
   try {
     const storedData = localStorage.getItem(STORAGE_KEY);
     if (storedData) {
       const parsedCategories = JSON.parse(storedData);
-      const filteredCategories = parsedCategories.filter(
-        (cat: Category) => cat.id !== "all" && cat.id !== DEFAULT_CATEGORY.id
-      );
-      return { categories: [...filteredCategories, DEFAULT_CATEGORY] };
+      return { categories: parsedCategories };
     }
   } catch (error) {
     console.error("Error loading categories from localStorage:", error);
   }
 
-  return { categories: [DEFAULT_CATEGORY] };
+  return { categories: [] };
 };
 
 const categorySlice = createSlice({
@@ -36,18 +31,11 @@ const categorySlice = createSlice({
   reducers: {
     addCategory: (state, action: PayloadAction<Category>) => {
       if (!state.categories.some((cat) => cat.id === action.payload.id)) {
-        state.categories = [
-          ...state.categories.filter((cat) => cat.id !== DEFAULT_CATEGORY.id),
-          action.payload,
-          DEFAULT_CATEGORY,
-        ];
+        state.categories = [...state.categories, action.payload];
 
         // Update localStorage
         if (typeof window !== "undefined") {
-          const categoriesToStore = state.categories.filter(
-            (cat) => cat.id !== "all"
-          );
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(categoriesToStore));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.categories));
         }
       }
     },

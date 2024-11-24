@@ -72,6 +72,10 @@
       "totalTransactions": "Total number of transactions in this category:",
       "lineChart": "Line Chart",
       "barChart": "Bar Chart"
+    },
+    "toast": {
+      "categoryToast": "Category Successfully Added!",
+      "transactionToast": "Transaction Successfully Added!"
     }
   }
 }

@@ -72,6 +72,10 @@
       "totalTransactions": " Bu kategorideki toplam işlem sayısı:",
       "lineChart": "Çizgi Grafiği",
       "barChart": "Çubuk Grafiği"
+    },
+    "toast": {
+      "categoryToast": "Kategori Başarıyla Eklendi!",
+      "transactionToast": "İşlem Başarıyla Eklendi!"
     }
   }
 }

@@ -2,31 +2,31 @@ import React from 'react';
 import { Search } from 'lucide-react';
 
 const SearchingAnimation = () => {
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] p-8">
-            <div className="relative">
-                <div className="absolute inset-0 rounded-full animate-ping-slow bg-blue-100 w-24 h-24" />
-                <div className="absolute inset-0 rounded-full animate-ping-fast bg-blue-200 w-20 h-20 m-2" />
-                <div className="relative w-16 h-16 animate-spin-slow">
-                    <Search
-                        className="w-16 h-16 text-blue-500"
-                        strokeWidth={1.5}
-                    />
-                </div>
-            </div>
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] p-8">
+      <div className="relative">
+        <div className="absolute inset-0 rounded-full animate-ping-slow bg-blue-100 w-24 h-24" />
+        <div className="absolute inset-0 rounded-full animate-ping-fast bg-blue-200 w-20 h-20 m-2" />
+        <div className="relative w-16 h-16 animate-spin-slow">
+          <Search
+            className="w-16 h-16 text-blue-500"
+            strokeWidth={1.5}
+          />
+        </div>
+      </div>
 
-            <div className="mt-8 text-center">
-                <h3 className="text-xl font-medium text-gray-700 mb-2">
-                    Aranıyor
-                </h3>
-                <div className="flex items-center justify-center space-x-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
-                </div>
-            </div>
+      <div className="mt-8 text-center">
+        <h3 className="text-xl font-medium text-gray-700 mb-2">
+          Loading
+        </h3>
+        <div className="flex items-center justify-center space-x-1">
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+        </div>
+      </div>
 
-            <style jsx global>{`
+      <style jsx global>{`
         @keyframes spin-slow {
           from {
             transform: rotate(0deg);
@@ -70,8 +70,8 @@ const SearchingAnimation = () => {
           animation: ping-fast 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default SearchingAnimation;

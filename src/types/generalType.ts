@@ -12,12 +12,13 @@ export interface NewTransaction {
   amount: string;
   description: string;
 }
+export type TransactionType = "income" | "expense";
+
 export interface Category {
   id: string;
   label: string;
+  type: TransactionType;
+  limit?: number;
 }
-
 export type Theme = "light" | "dark";
 export type Language = "tr" | "en";
-
-export type TransactionType = "income" | "expense";

@@ -26,6 +26,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [viewType, setViewType] = useState<ViewType>('monthly');
     const categoryId = params.slug as string;
+
     const t = useTranslations();
     useEffect(() => {
         const fetchCategoryInfo = () => {
@@ -100,49 +101,58 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 order-2 sm:order-1">
                     {viewType === 'monthly' ? t("budget.stats.monthly") : t("budget.stats.yearly")} {t("budget.stats.chartName")}
                 </h2>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 w-full sm:w-auto order-1 sm:order-2 overflow-x-auto">
                     <button
                         onClick={() => setViewType('monthly')}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors
-              ${viewType === 'monthly'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-none whitespace-nowrap
+                            ${viewType === 'monthly'
+                                ? 'bg-blue-500 text-white dark:bg-blue-600'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                             }`}
                     >
                         {t("budget.stats.monthly")}
                     </button>
                     <button
                         onClick={() => setViewType('yearly')}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors
-              ${viewType === 'yearly'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-none whitespace-nowrap
+                            ${viewType === 'yearly'
+                                ? 'bg-blue-500 text-white dark:bg-blue-600'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                             }`}
                     >
                         {t("budget.stats.yearly")}
                     </button>
                 </div>
             </div>
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold mb-2">{categoryName} {t("budget.stats.stats")}</h1>
-                <p className="text-sm text-gray-600">
+            <div className="mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900 dark:text-gray-100">
+                    {categoryName} {t("budget.stats.stats")}
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                     {t("budget.stats.totalTransactions")} {categoryTransactions.length}
                 </p>
             </div>
-
-            <div className="mt-8">
-                <h2 className="text-xl font-semibold">{t("budget.stats.lineChart")}</h2>
-                <LineChartComponent data={chartData} />
-            </div>
-            <div className="mt-8">
-                <h2 className="text-xl font-semibold">{t("budget.stats.barChart")}</h2>
-                <div className="w-full h-[400px] bg-white p-4 rounded-xl border">
-                    <BarChartComponent data={chartData} />
+            <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100 px-1">
+                        {t("budget.stats.lineChart")}
+                    </h2>
+                    <div className="w-full h-[300px] sm:h-[400px] -mx-2 sm:mx-0">
+                        <LineChartComponent data={chartData} />
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100 px-1">
+                        {t("budget.stats.barChart")}
+                    </h2>
+                    <div className="w-full h-[300px] sm:h-[400px] -mx-2 sm:mx-0">
+                        <BarChartComponent data={chartData} />
+                    </div>
                 </div>
             </div>
         </div>
