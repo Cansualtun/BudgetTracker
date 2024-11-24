@@ -62,7 +62,9 @@
       "categoryName": "Category Name",
       "cancel": "Cancel",
       "add": "Add",
-      "placeholder": "Example: Cosmectic"
+      "placeholder": "Example: Cosmectic",
+      "expenseLimit": "Expense Limit",
+      "limitDescription": "You can set limits on your expenses in this area."
     },
     "stats": {
       "chartName": "Income/Expense Chart",

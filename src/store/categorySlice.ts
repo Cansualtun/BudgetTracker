@@ -32,8 +32,6 @@ const categorySlice = createSlice({
     addCategory: (state, action: PayloadAction<Category>) => {
       if (!state.categories.some((cat) => cat.id === action.payload.id)) {
         state.categories = [...state.categories, action.payload];
-
-        // Update localStorage
         if (typeof window !== "undefined") {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state.categories));
         }
@@ -42,8 +40,17 @@ const categorySlice = createSlice({
     setCategories: (state, action: PayloadAction<Category[]>) => {
       state.categories = action.payload;
     },
+    removeCategory: (state, action: PayloadAction<string>) => {
+      state.categories = state.categories.filter(
+        (category) => category.id !== action.payload
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.categories));
+      }
+    },
   },
 });
 
-export const { addCategory, setCategories } = categorySlice.actions;
+export const { addCategory, setCategories, removeCategory } =
+  categorySlice.actions;
 export default categorySlice.reducer;

@@ -1,25 +1,14 @@
 "use client"
-import { useAppSelector } from '@/hooks/useAppDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch';
 import { TransactionType } from '@/types/generalType';
 import { useTranslations } from "next-intl";
 import { useState, ChangeEvent, useEffect } from 'react';
+import { addTransaction } from '@/store/transactionSlice';
+import toast from 'react-hot-toast';
 
 interface Category {
     id: string;
     label: string;
-}
-
-interface Transaction {
-    id: number;
-    type: TransactionType;
-    amount: number;
-    description: string;
-    category: string;
-    date: string;
-}
-
-interface BudgetFormProps {
-    onSubmit: (transaction: Transaction) => void;
 }
 
 interface NewTransactionState {
@@ -40,8 +29,9 @@ const DEFAULT_TRANSACTION: NewTransactionState = {
     date: new Date().toISOString().split('T')[0]
 };
 
-export function BudgetForm({ onSubmit }: BudgetFormProps) {
+export function BudgetForm() {
     const t = useTranslations();
+    const dispatch = useAppDispatch();
     const categories = useAppSelector(state => state.categories.categories);
     const [newTransaction, setNewTransaction] = useState<NewTransactionState>(DEFAULT_TRANSACTION);
 
@@ -56,31 +46,42 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!isValidTransaction()) return;
+        if (!isValidTransaction()) {
+            toast.error("Lütfen tüm alanları doldurun!");
+            return;
+        }
 
-        onSubmit({
+        const transaction = {
             id: Date.now(),
             type: newTransaction.type,
             amount: parseFloat(newTransaction.amount),
             description: newTransaction.description,
             category: newTransaction.category,
             date: newTransaction.date
-        });
+        };
 
+        dispatch(addTransaction(transaction));
+        toast.success("İşlem başarıyla eklendi!");
         resetForm();
     };
+
     useEffect(() => {
-        setNewTransaction({ ...newTransaction, category: categories[0]?.id })
-    }, [categories])
+        if (categories.length > 0) {
+            setNewTransaction(prev => ({ ...prev, category: categories[0]?.id }));
+        }
+    }, [categories]);
+
     const isValidTransaction = () => {
         return newTransaction.amount &&
-            newTransaction.description &&
+            parseFloat(newTransaction.amount) > 0 &&
+            newTransaction.description.trim() &&
             newTransaction.date;
     };
 
     const resetForm = () => {
         setNewTransaction({
             ...DEFAULT_TRANSACTION,
+            category: categories[0]?.id || DEFAULT_CATEGORY.id,
             date: new Date().toISOString().split('T')[0]
         });
     };
@@ -163,9 +164,7 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
                         text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500
                         border-gray-300 dark:border-gray-700"
                 >
-
                     {categories.map(category => (
-
                         <option key={category.id} value={category.id}>
                             {category.label}
                         </option>
@@ -175,8 +174,9 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
 
             <button
                 onClick={handleSubmit}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg 
-                    transition-colors duration-200 ease-in-out"
+                disabled={!isValidTransaction()}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 
+                    text-white p-3 rounded-lg transition-colors duration-200 ease-in-out"
             >
                 {t('budget.form.save')}
             </button>

@@ -4,23 +4,21 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CategoryModal from "../CategoryModal";
-import { addCategory } from '@/store/categorySlice';
+import { addCategory, removeCategory } from '@/store/categorySlice';
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
 import toast from "react-hot-toast";
-import { BarChart3, PlusCircle } from "lucide-react";
-
-interface TransactionListProps {
-    transactions: Transaction[];
-}
+import { BarChart3, PlusCircle, Trash2, X } from "lucide-react";
+import { removeTransaction } from "@/store/transactionSlice";
 
 type ActiveTabType = 'all' | string;
 
-export function TransactionList({ transactions }: TransactionListProps) {
+export function TransactionList() {
     const [activeTab, setActiveTab] = useState<ActiveTabType>('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
     const dispatch = useAppDispatch();
     const categories = useAppSelector(state => state.categories.categories);
+    const transactions = useAppSelector(state => state.transactions.transactions);
     const allCategories = [{ id: 'all', label: 'Tümü' }, ...categories];
 
     const router = useRouter();
@@ -32,15 +30,28 @@ export function TransactionList({ transactions }: TransactionListProps) {
             const newCategoryObj = {
                 id: newCategoryId,
                 label: newCategory.trim(),
-                type, // Burada type doğru atanıyor mu kontrol edin
-                ...(limit && { limit }) // Eğer gider ise limit ekleniyor
+                type,
+                ...(limit && { limit })
             };
 
-            dispatch(addCategory(newCategoryObj)); // Redux state'e doğru ekleniyor mu kontrol edin
+            dispatch(addCategory(newCategoryObj));
             toast.success(t("budget.toast.categoryToast"));
             setActiveTab(newCategoryId);
             setNewCategory('');
             setIsModalOpen(false);
+        }
+    };
+
+    const handleDeleteCategory = (categoryId: string) => {
+        const hasTransactions = transactions.some(t => t.category === categoryId);
+        if (hasTransactions) {
+            toast.error("Bu kategoride işlemler bulunduğu için silinemiyor!");
+            return;
+        }
+        dispatch(removeCategory(categoryId));
+        toast.success("Kategori başarıyla silindi!");
+        if (activeTab === categoryId) {
+            setActiveTab('all');
         }
     };
 
@@ -54,6 +65,12 @@ export function TransactionList({ transactions }: TransactionListProps) {
             .filter(t => t.type === type)
             .reduce((sum, t) => sum + t.amount, 0);
     };
+
+    const handleDeleteTransaction = (transactionId: number) => {
+        dispatch(removeTransaction(transactionId));
+        toast.success("İşlem başarıyla silindi!");
+    };
+
 
     return (
         <div className="mt-8">
@@ -76,19 +93,32 @@ export function TransactionList({ transactions }: TransactionListProps) {
                                     </span>
                                 )}
                             </button>
-                            {category.id !== 'all' && (
-                                <button
-                                    onClick={() => {
-                                        router.push(`/stats/${encodeURIComponent(category.id)}`);
-                                    }}
-                                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50
-                                    dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-500/10
-                                    rounded-lg transition-colors flex items-center"
-                                    title={`${category.label} istatistikleri`}
-                                >
-                                    <BarChart3 className="w-4 h-4" />
-                                </button>
-                            )}
+                            <div className="flex items-center gap-1">
+                                {category.id !== 'all' && (
+                                    <>
+                                        <button
+                                            onClick={() => {
+                                                router.push(`/stats/${encodeURIComponent(category.id)}`);
+                                            }}
+                                            className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50
+                                            dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-500/10
+                                            rounded-lg transition-colors flex items-center"
+                                            title={`${category.label} istatistikleri`}
+                                        >
+                                            <BarChart3 className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteCategory(category.id)}
+                                            className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50
+                                            dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
+                                            rounded-lg transition-colors flex items-center"
+                                            title={`${category.label} kategorisini sil`}
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     ))}
                     <button
@@ -141,6 +171,15 @@ export function TransactionList({ transactions }: TransactionListProps) {
                                 <span>
                                     {transaction.type === 'income' ? '+' : '-'} ₺{transaction.amount.toLocaleString()}
                                 </span>
+                                <button
+                                    onClick={() => handleDeleteTransaction(transaction.id as any)}
+                                    className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50
+                                    dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
+                                    rounded-lg transition-colors"
+                                    title="İşlemi sil"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -62,7 +62,9 @@
       "categoryName": "Kategori Adı",
       "cancel": "İptal",
       "add": "Ekle",
-      "placeholder": "Örn: Kozmetik"
+      "placeholder": "Örn: Kozmetik",
+      "expenseLimit": "Harcama Limiti",
+      "limitDescription": "Harcamalarınıza bu alanda limit koyabilirsiniz."
     },
     "stats": {
       "chartName": "Gelir/Gider Grafiği",
