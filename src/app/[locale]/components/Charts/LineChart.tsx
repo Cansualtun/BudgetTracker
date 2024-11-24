@@ -32,16 +32,16 @@ const LineChartComponent = ({ data }: ChartProps) => {
                     stroke="currentColor"
                     opacity={0.7}
                     tick={{ fill: 'currentColor', opacity: 0.7, fontSize: '0.75rem' }}
-                    angle={-45} // Mobilde etiketlerin üst üste binmemesi için
+                    angle={-45}
                     textAnchor="end"
-                    height={60} // Açılı etiketler için daha fazla alan
-                    interval="preserveStartEnd" // Mobilde daha az etiket göster
+                    height={60}
+                    interval="preserveStartEnd"
                 />
                 <YAxis
                     stroke="currentColor"
                     opacity={0.7}
                     tick={{ fill: 'currentColor', opacity: 0.7, fontSize: '0.75rem' }}
-                    width={45} // Mobilde daha dar
+                    width={45}
                 />
                 <Tooltip
                     contentStyle={{
@@ -66,7 +66,7 @@ const LineChartComponent = ({ data }: ChartProps) => {
                     dataKey="gelir"
                     stroke="#22c55e"
                     strokeWidth={2}
-                    dot={{ fill: '#22c55e', r: 4 }} // Mobilde daha küçük noktalar
+                    dot={{ fill: '#22c55e', r: 4 }}
                 />
                 <Line
                     type="monotone"

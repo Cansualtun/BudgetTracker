@@ -2,13 +2,14 @@
 import { Transaction, TransactionType } from "@/types/generalType";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryModal from "../CategoryModal";
 import { addCategory, removeCategory } from '@/store/categorySlice';
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
 import toast from "react-hot-toast";
 import { BarChart3, PlusCircle, Trash2, X } from "lucide-react";
 import { removeTransaction } from "@/store/transactionSlice";
+import { checkCategoryExpenseLimit } from "@/helpers/expenseLimit";
 
 type ActiveTabType = 'all' | string;
 
@@ -61,16 +62,56 @@ export function TransactionList() {
 
     const getCategoryTotal = (category: string, type: 'income' | 'expense') => {
         const filtered = category === 'all' ? transactions : transactions.filter(t => t.category === category);
-        return filtered
+        const total = filtered
             .filter(t => t.type === type)
             .reduce((sum, t) => sum + t.amount, 0);
-    };
 
+        if (type === 'expense' && category !== 'all') {
+            const categoryObj = categories.find(c => c.id === category);
+            if (categoryObj?.limit) {
+                const { percentage } = checkCategoryExpenseLimit(transactions, categoryObj, { showToast: false });
+                if (percentage > 80) {
+                    return {
+                        amount: total,
+                        warning: true,
+                        percentage
+                    };
+                }
+            }
+        }
+
+        return {
+            amount: total,
+            warning: false,
+            percentage: 0
+        };
+    };
     const handleDeleteTransaction = (transactionId: number) => {
         dispatch(removeTransaction(transactionId));
         toast.success("İşlem başarıyla silindi!");
     };
+    useEffect(() => {
+        categories.forEach(category => {
+            if (category.type === 'expense' && category.limit) {
+                const { hasWarning, percentage } = checkCategoryExpenseLimit(transactions, category, { showToast: false });
+                if (hasWarning) {
+                    const totalExpense = transactions
+                        .filter(t => t.category === category.id && t.type === 'expense')
+                        .reduce((sum, t) => sum + t.amount, 0);
+                    const remainingBudget = category.limit - totalExpense;
 
+                    toast.error(
+                        `Dikkat: "${category.label}" kategorisinde limit aşımı! (%${percentage.toFixed(1)})
+                        Kalan: ₺${remainingBudget.toLocaleString()}`,
+                        {
+                            duration: 5000,
+                            icon: '⚠️',
+                        }
+                    );
+                }
+            }
+        });
+    }, [transactions, categories]);
 
     return (
         <div className="mt-8">
@@ -200,19 +241,28 @@ export function TransactionList() {
                             : `${allCategories.find(c => c.id === activeTab)?.label} Gelir`}
                     </h3>
                     <p className="text-xl text-green-600 dark:text-green-400 font-bold">
-                        ₺{getCategoryTotal(activeTab, 'income').toLocaleString()}
+                        ₺{getCategoryTotal(activeTab, 'income').amount.toLocaleString()}
                     </p>
                 </div>
-                <div className="bg-red-50 border-red-100 dark:bg-red-500/5 dark:border-red-500/20 
-                p-4 rounded-lg border">
+                <div className={`p-4 rounded-lg border ${getCategoryTotal(activeTab, 'expense').warning
+                    ? 'bg-red-100 border-red-200 dark:bg-red-500/20 dark:border-red-500/30'
+                    : 'bg-red-50 border-red-100 dark:bg-red-500/5 dark:border-red-500/20'
+                    }`}>
                     <h3 className="text-sm text-red-800 dark:text-red-300 font-medium">
                         {activeTab === 'all'
                             ? t("budget.transactions.list.categoryTotal.expense")
                             : `${allCategories.find(c => c.id === activeTab)?.label} Gider`}
                     </h3>
-                    <p className="text-xl text-red-600 dark:text-red-400 font-bold">
-                        ₺{getCategoryTotal(activeTab, 'expense').toLocaleString()}
-                    </p>
+                    <div className="flex items-center gap-2">
+                        <p className="text-xl text-red-600 dark:text-red-400 font-bold">
+                            ₺{getCategoryTotal(activeTab, 'expense').amount.toLocaleString()}
+                        </p>
+                        {getCategoryTotal(activeTab, 'expense').warning && (
+                            <span className="text-xs bg-red-200 dark:bg-red-500/30 text-red-800 dark:text-red-200 px-2 py-1 rounded-full">
+                                %{getCategoryTotal(activeTab, 'expense').percentage.toFixed(1)} limit
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
             <CategoryModal
