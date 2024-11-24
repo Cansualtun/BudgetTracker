@@ -218,7 +218,7 @@ export function TransactionList() {
                                     {transaction.type === 'income' ? '+' : '-'} ₺{transaction.amount.toLocaleString()}
                                 </span>
                                 <button
-                                    onClick={() => handleDeleteTransaction(transaction.id as any)}
+                                    onClick={() => handleDeleteTransaction(transaction.id)}
                                     className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50
                                     dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
                                     rounded-lg transition-colors"
