@@ -7,7 +7,6 @@ import { useRouter, usePathname } from 'next/navigation';
 
 export function Sidebar() {
     const { theme, toggleTheme } = useTheme();
-    const t = useTranslations();
     const router = useRouter();
     const pathname = usePathname();
 

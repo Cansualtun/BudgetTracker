@@ -11,7 +11,6 @@ interface ChartProps {
     data: ChartData[];
 }
 const LineChartComponent = ({ data }: ChartProps) => {
-    console.log(data, "ehe")
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart

@@ -13,7 +13,6 @@ interface ChartProps {
 }
 
 const BarChartComponent = ({ data }: ChartProps) => {
-    const t = useTranslations();
     return (
         <ResponsiveContainer width="100%" height="100%">
             <BarChart
