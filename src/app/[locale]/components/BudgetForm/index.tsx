@@ -70,8 +70,8 @@ export function BudgetForm({ onSubmit }: BudgetFormProps) {
         resetForm();
     };
     useEffect(() => {
-        setNewTransaction({ ...newTransaction, category: categories[0].id })
-    }, [])
+        setNewTransaction({ ...newTransaction, category: categories[0]?.id })
+    }, [categories])
     const isValidTransaction = () => {
         return newTransaction.amount &&
             newTransaction.description &&
