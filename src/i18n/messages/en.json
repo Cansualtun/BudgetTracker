@@ -80,6 +80,7 @@
       "transactionToast": "Transaction Successfully Added!",
       "categoryDeleted": "Category Successfully Deleted!",
       "transactionDeleted": "Transaction Successfully Deleted!",
+      "deletedError": "It cannot be deleted because there are transactions in this category!",
       "warning": "Warning",
       "fillInBlank": "Please fill in all fields!",
       "limitWarning": {
@@ -90,6 +91,21 @@
     },
     "loading": {
       "loading": "Loading.."
+    },
+    "categoryStats": {
+      "title": "Category Based Details",
+      "headers": {
+        "category": "Category",
+        "transactionCount": "Transaction Count",
+        "income": "Income",
+        "expense": "Expense",
+        "net": "Net",
+        "averageTransaction": "Average Transaction",
+        "limitUsage": "Limit Usage"
+      }
+    },
+    "excel": {
+      "downloadExcel": "Download Excel"
     }
   }
 }

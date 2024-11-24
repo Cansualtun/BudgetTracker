@@ -19,7 +19,7 @@ const BarChartComponent = ({ data }: ChartProps) => {
                 margin={{
                     top: 5,
                     right: 5,
-                    left: -20,
+                    left: 20,
                     bottom: 5,
                 }}
             >

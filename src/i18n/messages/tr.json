@@ -70,7 +70,7 @@
       "chartName": "Gelir/Gider Grafiği",
       "monthly": "Aylık",
       "yearly": "Yıllık",
-      "stats": "İstatistikleri",
+      "stats": "İstatistikler",
       "totalTransactions": " Bu kategorideki toplam işlem sayısı:",
       "lineChart": "Çizgi Grafiği",
       "barChart": "Çubuk Grafiği"
@@ -80,6 +80,7 @@
       "transactionToast": "İşlem Başarıyla Eklendi!",
       "categoryDeleted": "Kategori Başarıyla Silindi!",
       "transactionDeleted": "İşlem Başarıyla Silindi!",
+      "deletedError": "Bu kategoride işlemler bulunduğu için silinemiyor!",
       "warning": "Dikkat",
       "fillInBlank": "Lütfen tüm alanları doldurun!",
       "limitWarning": {
@@ -90,6 +91,21 @@
     },
     "loading": {
       "loading": "Yükleniyor.."
+    },
+    "categoryStats": {
+      "title": "Kategori Bazlı Detaylar",
+      "headers": {
+        "category": "Kategori",
+        "transactionCount": "İşlem Sayısı",
+        "income": "Gelir",
+        "expense": "Gider",
+        "net": "Net",
+        "averageTransaction": "Ortalama İşlem",
+        "limitUsage": "Limit Kullanımı"
+      }
+    },
+    "excel": {
+      "downloadExcel": "Excel İndir"
     }
   }
 }

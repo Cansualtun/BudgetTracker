@@ -1,7 +1,6 @@
 "use client"
 import { TransactionType } from "@/types/generalType";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoryModal from "../CategoryModal";
 import { addCategory, removeCategory } from '@/store/categorySlice';
@@ -10,6 +9,7 @@ import toast from "react-hot-toast";
 import { BarChart3, PlusCircle, Trash2, X } from "lucide-react";
 import { removeTransaction } from "@/store/transactionSlice";
 import { checkCategoryExpenseLimit } from "@/helpers/expenseLimit";
+import Link from "next/link";
 
 type ActiveTabType = 'all' | string;
 
@@ -22,7 +22,6 @@ export function TransactionList() {
     const transactions = useAppSelector(state => state.transactions.transactions);
     const allCategories = [{ id: 'all', label: 'Tümü' }, ...categories];
 
-    const router = useRouter();
     const t = useTranslations();
 
     const handleAddCategory = (type: TransactionType, limit?: number) => {
@@ -46,7 +45,7 @@ export function TransactionList() {
     const handleDeleteCategory = (categoryId: string) => {
         const hasTransactions = transactions.some(t => t.category === categoryId);
         if (hasTransactions) {
-            toast.error("Bu kategoride işlemler bulunduğu için silinemiyor!");
+            toast.error(t("budget.toast.deletedError"));
             return;
         }
         dispatch(removeCategory(categoryId));
@@ -140,19 +139,16 @@ export function TransactionList() {
                                 )}
                             </button>
                             <div className="flex items-center gap-1">
-                                {/* İstatistik butonu tüm kategoriler için gösteriliyor */}
-                                <button
-                                    onClick={() => {
-                                        router.push(category.id === 'all' ? '/stats/all' : `/stats/${encodeURIComponent(category.id)}`);
-                                    }}
-                                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50
-                                dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-500/10
-                                rounded-lg transition-colors flex items-center"
-                                    title={`${category.label} istatistikleri`}
+                                <Link
+                                    href={`/stats/${category.id}`}
+                                    className="flex items-center px-2 py-2 rounded-r-lg border-l
+                                hover:bg-secondary/20 transition-colors
+                                   text-foreground/70 hover:text-foreground
+                                   border-l-border/20"
+                                    title={`${category.label} ${t("budget.stats.stats")}`}
                                 >
-                                    <BarChart3 className="w-4 h-4" />
-                                </button>
-                                {/* Silme butonu sadece özel kategoriler için */}
+                                    <BarChart3 size={18} />
+                                </Link>
                                 {category.id !== 'all' && (
                                     <button
                                         onClick={() => handleDeleteCategory(category.id)}
@@ -174,10 +170,10 @@ export function TransactionList() {
                     dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700
                     text-sm font-medium rounded-t-lg transition-colors"
                     >
-                        <PlusCircle className="w-4 h-4" />
+                        <PlusCircle className="w-5 h-5" />
                     </button>
                 </nav>
-            </div>
+            </div >
             <div className="space-y-3">
                 {filteredTransactions.map(transaction => (
                     <div
@@ -277,6 +273,6 @@ export function TransactionList() {
                 newCategory={newCategory}
                 setNewCategory={setNewCategory}
             />
-        </div>
+        </div >
     );
 }

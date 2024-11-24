@@ -5,7 +5,8 @@ import { useAppSelector } from '@/hooks/useAppDispatch';
 import Loading from '../Searching';
 import LineChartComponent from '../Charts/LineChart';
 import BarChartComponent from '../Charts/BarChart';
-import { ArrowDown, ArrowUp, Minus } from 'lucide-react';
+import { ArrowDown, ArrowUp, FileSpreadsheet, Minus } from 'lucide-react';
+import { exportToExcel } from '@/helpers/excelExport';
 
 interface ChartData {
     name: string;
@@ -133,162 +134,187 @@ export default function AllStats() {
             </div>
         );
     }
-
+    const handleExportExcel = () => {
+        exportToExcel(categoryDetails, 'butce_raporu');
+    };
     return (
-        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 order-2 sm:order-1">
+        <div className="max-w-[1200px] mx-auto p-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center mb-4">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
                     {viewType === 'monthly' ? t("budget.stats.monthly") : t("budget.stats.yearly")} {t("budget.stats.chartName")}
                 </h2>
-                <div className="flex space-x-2 w-full sm:w-auto order-1 sm:order-2 overflow-x-auto">
+
+                <div className="flex gap-2 w-full sm:w-auto">
+                    <button
+                        onClick={handleExportExcel}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg 
+                            bg-emerald-100 hover:bg-emerald-200 text-emerald-700 
+                            dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 
+                            dark:text-emerald-400 text-sm font-medium transition-colors"
+                        title="Excel olarak indir"
+                    >
+                        <FileSpreadsheet size={16} />
+                        <span className="hidden sm:inline">{t("budget.excel.downloadExcel")}</span>
+                    </button>
                     <button
                         onClick={() => setViewType('monthly')}
-                        className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-none whitespace-nowrap
+                        className={`px-2 py-1.5 rounded text-xs font-medium flex-1 sm:flex-none sm:px-4 sm:py-2 sm:text-sm
                             ${viewType === 'monthly'
                                 ? 'bg-blue-500 text-white dark:bg-blue-600'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
                             }`}
                     >
                         {t("budget.stats.monthly")}
                     </button>
                     <button
                         onClick={() => setViewType('yearly')}
-                        className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex-1 sm:flex-none whitespace-nowrap
+                        className={`px-2 py-1.5 rounded text-xs font-medium flex-1 sm:flex-none sm:px-4 sm:py-2 sm:text-sm
                             ${viewType === 'yearly'
                                 ? 'bg-blue-500 text-white dark:bg-blue-600'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
                             }`}
                     >
                         {t("budget.stats.yearly")}
                     </button>
                 </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-100 dark:border-green-900/30">
-                    <h3 className="text-sm font-medium text-green-800 dark:text-green-300">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4 mb-4">
+                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-100 dark:border-green-900/30">
+                    <h3 className="text-xs sm:text-sm font-medium text-green-800 dark:text-green-300">
                         {t("budget.summary.totalIncome.label")}
                     </h3>
-                    <p className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
+                    <p className="mt-1 text-lg sm:text-xl font-bold text-green-600 dark:text-green-400">
                         ₺{transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}
                     </p>
                 </div>
-                <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-900/30">
-                    <h3 className="text-sm font-medium text-red-800 dark:text-red-300">
+                <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900/30">
+                    <h3 className="text-xs sm:text-sm font-medium text-red-800 dark:text-red-300">
                         {t("budget.summary.totalExpense.label")}
                     </h3>
-                    <p className="mt-2 text-2xl font-bold text-red-600 dark:text-red-400">
+                    <p className="mt-1 text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
                         ₺{transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}
                     </p>
                 </div>
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
-                    <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                    <h3 className="text-xs sm:text-sm font-medium text-blue-800 dark:text-blue-300">
                         {t("budget.summary.netBalance.label")}
                     </h3>
-                    <p className="mt-2 text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    <p className="mt-1 text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
                         ₺{(transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0) -
                             transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)).toLocaleString()}
                     </p>
                 </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-6">
-                    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100 px-1">
+            <div className="grid grid-cols-1 gap-4 mb-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                    <h2 className="text-base sm:text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
                         {t("budget.stats.lineChart")}
                     </h2>
-                    <div className="w-full h-[300px] sm:h-[400px] -mx-2 sm:mx-0">
+                    <div className="w-full h-[200px] sm:h-[300px]">
                         <LineChartComponent data={chartData} />
                     </div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-6">
-                    <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100 px-1">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+                    <h2 className="text-base sm:text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
                         {t("budget.stats.barChart")}
                     </h2>
-                    <div className="w-full h-[300px] sm:h-[400px] -mx-2 sm:mx-0">
+                    <div className="w-full h-[200px] sm:h-[300px]">
                         <BarChartComponent data={categoryTotals} />
                     </div>
                 </div>
             </div>
-            <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                    Kategori Bazlı Detaylar
+
+            {/* Category Details Table */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+                <h2 className="text-base sm:text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                    {t("budget.categoryStats.title")}
                 </h2>
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-[800px]">
-                        <thead>
-                            <tr className="border-b border-gray-200 dark:border-gray-700">
-                                <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Kategori</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">İşlem Sayısı</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-green-500 dark:text-green-400">Gelir</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-red-500 dark:text-red-400">Gider</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-blue-500 dark:text-blue-400">Net</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Ortalama İşlem</th>
-                                <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Limit Kullanımı</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categoryDetails.map((detail) => (
-                                <tr
-                                    key={detail.id}
-                                    className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                                >
-                                    <td className="py-3 px-4">
-                                        <div className="flex items-center gap-2">
-                                            {detail.net > 0 ? (
-                                                <ArrowUp className="w-4 h-4 text-green-500" />
-                                            ) : detail.net < 0 ? (
-                                                <ArrowDown className="w-4 h-4 text-red-500" />
-                                            ) : (
-                                                <Minus className="w-4 h-4 text-gray-500" />
-                                            )}
-                                            <span className="font-medium text-gray-900 dark:text-gray-100">
-                                                {detail.name}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="text-right py-3 px-4 text-gray-600 dark:text-gray-300">
-                                        {detail.transactionCount}
-                                    </td>
-                                    <td className="text-right py-3 px-4 text-green-600 dark:text-green-400">
-                                        {detail.income > 0 && '₺'}{detail.income.toLocaleString()}
-                                    </td>
-                                    <td className="text-right py-3 px-4 text-red-600 dark:text-red-400">
-                                        {detail.expense > 0 && '₺'}{detail.expense.toLocaleString()}
-                                    </td>
-                                    <td className={`text-right py-3 px-4 font-medium ${detail.net > 0
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : detail.net < 0
-                                            ? 'text-red-600 dark:text-red-400'
-                                            : 'text-gray-600 dark:text-gray-400'
-                                        }`}>
-                                        {detail.net > 0 && '+'}₺{detail.net.toLocaleString()}
-                                    </td>
-                                    <td className="text-right py-3 px-4 text-gray-600 dark:text-gray-300">
-                                        ₺{detail.avgTransaction.toLocaleString()}
-                                    </td>
-                                    <td className="text-right py-3 px-4">
-                                        {detail.limitUsage !== null ? (
-                                            <div className="flex items-center justify-end gap-2">
-                                                <div className="w-20 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full rounded-full ${detail.limitUsage >= 80 ? 'bg-red-500'
-                                                            : detail.limitUsage >= 50 ? 'bg-yellow-500'
-                                                                : 'bg-green-500'
-                                                            }`}
-                                                        style={{ width: `${Math.min(detail.limitUsage, 100)}%` }}
-                                                    />
-                                                </div>
-                                                <span className="text-sm text-gray-600 dark:text-gray-300">
-                                                    {detail.limitUsage.toFixed(0)}%
+                <div className="overflow-x-auto -mx-3">
+                    <div className="inline-block min-w-full align-middle">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead>
+                                <tr className="text-xs sm:text-sm">
+                                    <th scope="col" className="px-2 py-2 sm:px-3 sm:py-3 text-left font-medium text-gray-500 dark:text-gray-400">
+                                        {t("budget.categoryStats.headers.category")}
+                                    </th>
+                                    <th scope="col" className="px-2 py-2 sm:px-3 sm:py-3 text-right font-medium text-gray-500 dark:text-gray-400">
+                                        {t("budget.categoryStats.headers.transactionCount")}
+                                    </th>
+                                    <th scope="col" className="px-2 py-2 sm:px-3 sm:py-3 text-right font-medium text-green-500">
+                                        {t("budget.categoryStats.headers.income")}
+                                    </th>
+                                    <th scope="col" className="px-2 py-2 sm:px-3 sm:py-3 text-right font-medium text-red-500">
+                                        {t("budget.categoryStats.headers.expense")}
+                                    </th>
+                                    <th scope="col" className="px-2 py-2 sm:px-3 sm:py-3 text-right font-medium text-blue-500">
+                                        {t("budget.categoryStats.headers.net")}
+                                    </th>
+                                    <th scope="col" className="hidden sm:table-cell px-3 py-3 text-right font-medium text-gray-500">
+                                        {t("budget.categoryStats.headers.averageTransaction")}
+                                    </th>
+                                    <th scope="col" className="hidden sm:table-cell px-3 py-3 text-right font-medium text-gray-500">
+                                        {t("budget.categoryStats.headers.limitUsage")}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                {categoryDetails.map((detail) => (
+                                    <tr key={detail.id} className="text-xs sm:text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                        <td className="px-2 py-2 sm:px-3 sm:py-3 whitespace-nowrap">
+                                            <div className="flex items-center gap-1 sm:gap-2">
+                                                {detail.net > 0 ? (
+                                                    <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                                                ) : detail.net < 0 ? (
+                                                    <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                                                ) : (
+                                                    <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+                                                )}
+                                                <span className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {detail.name}
                                                 </span>
                                             </div>
-                                        ) : (
-                                            <span className="text-gray-400 dark:text-gray-500">-</span>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td className="px-2 py-2 sm:px-3 sm:py-3 text-right text-gray-600 dark:text-gray-300">
+                                            {detail.transactionCount}
+                                        </td>
+                                        <td className="px-2 py-2 sm:px-3 sm:py-3 text-right text-green-600">
+                                            {detail.income > 0 && '₺'}{detail.income.toLocaleString()}
+                                        </td>
+                                        <td className="px-2 py-2 sm:px-3 sm:py-3 text-right text-red-600">
+                                            {detail.expense > 0 && '₺'}{detail.expense.toLocaleString()}
+                                        </td>
+                                        <td className={`px-2 py-2 sm:px-3 sm:py-3 text-right font-medium ${detail.net > 0 ? 'text-green-600' : detail.net < 0 ? 'text-red-600' : 'text-gray-600'
+                                            }`}>
+                                            {detail.net > 0 && '+'}{detail.net.toLocaleString()}
+                                        </td>
+                                        <td className="hidden sm:table-cell px-3 py-3 text-right text-gray-600">
+                                            ₺{detail.avgTransaction.toLocaleString()}
+                                        </td>
+                                        <td className="hidden sm:table-cell px-3 py-3 text-right">
+                                            {detail.limitUsage !== null ? (
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <div className="w-16 h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full">
+                                                        <div
+                                                            className={`h-full rounded-full ${detail.limitUsage >= 80 ? 'bg-red-500' :
+                                                                detail.limitUsage >= 50 ? 'bg-yellow-500' :
+                                                                    'bg-green-500'
+                                                                }`}
+                                                            style={{ width: `${Math.min(detail.limitUsage, 100)}%` }}
+                                                        />
+                                                    </div>
+                                                    <span className="text-gray-600 dark:text-gray-300">
+                                                        {detail.limitUsage.toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
