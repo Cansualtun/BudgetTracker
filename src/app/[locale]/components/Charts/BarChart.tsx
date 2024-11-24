@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface ChartData {

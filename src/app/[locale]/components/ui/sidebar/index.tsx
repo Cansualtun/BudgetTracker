@@ -1,7 +1,6 @@
 "use client"
 import { useTheme } from '@/context/ThemeContext';
 import { Sun, Moon, Languages } from 'lucide-react';
-import { useTranslations } from "next-intl";
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
