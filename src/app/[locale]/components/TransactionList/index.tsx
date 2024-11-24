@@ -127,7 +127,7 @@ export function TransactionList() {
                             <button
                                 onClick={() => setActiveTab(category.id)}
                                 className={`whitespace-nowrap py-2 px-3 border-b-2 text-sm font-medium rounded-t-lg transition-colors
-                                ${activeTab === category.id
+                            ${activeTab === category.id
                                         ? 'border-blue-500 text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-500/10'
                                         : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700'
                                     }`}
@@ -140,29 +140,29 @@ export function TransactionList() {
                                 )}
                             </button>
                             <div className="flex items-center gap-1">
+                                {/* İstatistik butonu tüm kategoriler için gösteriliyor */}
+                                <button
+                                    onClick={() => {
+                                        router.push(category.id === 'all' ? '/stats/all' : `/stats/${encodeURIComponent(category.id)}`);
+                                    }}
+                                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50
+                                dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-500/10
+                                rounded-lg transition-colors flex items-center"
+                                    title={`${category.label} istatistikleri`}
+                                >
+                                    <BarChart3 className="w-4 h-4" />
+                                </button>
+                                {/* Silme butonu sadece özel kategoriler için */}
                                 {category.id !== 'all' && (
-                                    <>
-                                        <button
-                                            onClick={() => {
-                                                router.push(`/stats/${encodeURIComponent(category.id)}`);
-                                            }}
-                                            className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50
-                                            dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-500/10
-                                            rounded-lg transition-colors flex items-center"
-                                            title={`${category.label} istatistikleri`}
-                                        >
-                                            <BarChart3 className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteCategory(category.id)}
-                                            className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50
-                                            dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
-                                            rounded-lg transition-colors flex items-center"
-                                            title={`${category.label} kategorisini sil`}
-                                        >
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    </>
+                                    <button
+                                        onClick={() => handleDeleteCategory(category.id)}
+                                        className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50
+                                    dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-500/10
+                                    rounded-lg transition-colors flex items-center"
+                                        title={`${category.label} kategorisini sil`}
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
                                 )}
                             </div>
                         </div>
@@ -170,9 +170,9 @@ export function TransactionList() {
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="whitespace-nowrap py-2 px-3 border-b-2 border-transparent 
-                        text-gray-600 hover:text-gray-900 hover:border-gray-300 
-                        dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700
-                        text-sm font-medium rounded-t-lg transition-colors"
+                    text-gray-600 hover:text-gray-900 hover:border-gray-300 
+                    dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700
+                    text-sm font-medium rounded-t-lg transition-colors"
                     >
                         <PlusCircle className="w-4 h-4" />
                     </button>
