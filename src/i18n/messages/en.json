@@ -23,15 +23,15 @@
     "summary": {
       "totalIncome": {
         "label": "Total Income",
-        "prefix": "$"
+        "prefix": "₺"
       },
       "totalExpense": {
         "label": "Total Expense",
-        "prefix": "$"
+        "prefix": "₺"
       },
       "netBalance": {
         "label": "Net Balance",
-        "prefix": "$"
+        "prefix": "₺"
       }
     },
     "transactions": {
