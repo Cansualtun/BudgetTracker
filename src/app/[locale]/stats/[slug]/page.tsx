@@ -5,7 +5,7 @@ import LineChartComponent from '../../components/Charts/LineChart';
 import BarChartComponent from '../../components/Charts/BarChart';
 import { useTranslations } from 'next-intl';
 import SearchingAnimation from '../../components/Searching';
-
+import titleToSlug from "@/helpers/titleToUrl";
 interface CategoryType {
     id: string;
     label: string;
@@ -25,9 +25,10 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
     const [categoryTransactions, setCategoryTransactions] = useState<Transaction[]>([]);
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [viewType, setViewType] = useState<ViewType>('monthly');
-    const categoryId = params.slug as string;
 
+    const categoryId = titleToSlug(params.slug);
     const t = useTranslations();
+    console.log(categoryId ,"ne")
     useEffect(() => {
         const fetchCategoryInfo = () => {
             const storedCategories = localStorage.getItem('budget_categories');
@@ -92,7 +93,7 @@ const DynamicStats = ({ params }: { params: { slug: string } }) => {
         fetchTransactionData();
     }, [categoryId, viewType]);
 
-    if (!categoryName) {
+    if (!categoryId) {
         return (
             <div className="container mx-auto px-4 py-8">
                 <SearchingAnimation />
